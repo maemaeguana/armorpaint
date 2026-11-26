@@ -26,6 +26,8 @@ jobs:
 
     - name: Compile
       shell: bash
+      env:
+        IRON_PLATFORM: windows_x64
       run: |
         cd paint
         ../base/make --compile
