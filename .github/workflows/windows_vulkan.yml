@@ -1,6 +1,7 @@
 name: Windows (Vulkan)
 
 on:
+  workflow_dispatch:
   push:
     branches:
     - main
@@ -10,11 +11,11 @@ on:
 
 jobs:
   build:
-
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
+
     - name: Install Vulkan SDK
       uses: jakoch/install-vulkan-sdk-action@v1
       with:
@@ -22,7 +23,17 @@ jobs:
         install_runtime: false
         cache: true
         stripdown: true
+
     - name: Compile
+      shell: bash
       run: |
         cd paint
         ../base/make --compile
+
+    - name: Upload Windows build
+      uses: actions/upload-artifact@v4
+      with:
+        name: ArmorPaint-Windows-x64
+        path: paint/build/**
+        if-no-files-found: error
+        retention-days: 14
